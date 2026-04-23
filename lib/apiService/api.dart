@@ -6,10 +6,12 @@ class ApiClientes {
   static const url = "http://10.0.2.2:3000/api/clientes";
 
   static Future<List<Cliente>> getClientes() async {
+    print("LLLAMANDO LLAMANDO PROBANDO PROBAND");
     final res = await http.get(Uri.parse(url));
-
+    print(res);
     if (res.statusCode == 200) {
-      List data = jsonDecode(res.body);
+     final json = jsonDecode(res.body);
+     List data = json["lista_clientes"];
       
       print(data);
       return data.map((e) => Cliente.fromJson(e)).toList();

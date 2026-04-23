@@ -15,6 +15,7 @@ class _Mongo_HomeState extends State<Mongo_Home> {
   @override
   void initState() {
     super.initState();
+    print("INITSTATE EJECUTADO");
     clientes = ApiClientes.getClientes();
   }
 
@@ -27,8 +28,8 @@ class _Mongo_HomeState extends State<Mongo_Home> {
       ),
       body: Center(
         child: Container(
-          width: 400,
-          height: 600,
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             border: Border.all(width: 2, color: Colors.black),
           ),
@@ -48,7 +49,9 @@ class _Mongo_HomeState extends State<Mongo_Home> {
 
             
               final data = snapshot.data!;
-              print(data);
+              print("asdasdajsdbAKSJLDaksdASHLDaksjdKASJDlasdAKSD");
+              print("DATA LENGTH: ${data.length}");
+              
               return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, index) {
