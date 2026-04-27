@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_mongo.dart';
 import 'sql.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -11,7 +11,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: PrimeraVista());
+    return MaterialApp(
+      theme: ThemeData(
+      textTheme: GoogleFonts.poppinsTextTheme(),
+      scaffoldBackgroundColor: const Color(0xFF2A2A2A),
+  ),
+      home: PrimeraVista());
   }
 }
 
@@ -30,7 +35,7 @@ class Selector extends State<PrimeraVista> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2A2A2A),
+      backgroundColor: const Color(0xFF2A2A2A),
 
       //barra superior
       //contenido principall
@@ -53,7 +58,6 @@ class Selector extends State<PrimeraVista> {
                 style: TextStyle(
                   color: const Color.fromARGB(255, 255, 224, 48),
                   fontSize: 30,
-
                   fontWeight: FontWeight.bold,
                 ),
               ),

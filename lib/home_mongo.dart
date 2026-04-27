@@ -23,13 +23,22 @@ class _Mongo_HomeState extends State<Mongo_Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text("Vista Mongo"),
+        backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          "Contactos",
+          style: TextStyle(
+            color: Colors.yellow,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.yellow),
       ),
       body: Column(
         children: [
           //busqueda y filtro
-          
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(10),
@@ -40,12 +49,17 @@ class _Mongo_HomeState extends State<Mongo_Home> {
                 // borde normal
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.yellow, width: 2),
+                  borderRadius: BorderRadius.circular(10),
                 ),
 
-                
                 hintText: "Buscar cliente...",
-                hintStyle: const TextStyle(color: Color.fromARGB(224, 255, 241, 43)),
-                prefixIcon: const Icon(Icons.search, color:  Color.fromARGB(224, 255, 241, 43)),
+                hintStyle: const TextStyle(
+                  color: Color.fromARGB(224, 255, 241, 43),
+                ),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: Color.fromARGB(224, 255, 241, 43),
+                ),
                 filled: true,
                 fillColor: Colors.grey[800],
                 border: OutlineInputBorder(
