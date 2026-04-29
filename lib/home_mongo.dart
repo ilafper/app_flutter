@@ -70,14 +70,12 @@ class _Mongo_HomeState extends State<Mongo_Home> {
             ),
           ),
           Expanded(
+            // contenedor del buscador
             child: Container(
               width: double.infinity,
               height: double.infinity,
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                border: Border.all(width: 2, color: Colors.black),
-                color: Color.fromARGB(255, 24, 23, 23),
-              ),
+              decoration: BoxDecoration(color: Color.fromARGB(255, 24, 23, 23)),
               child: FutureBuilder<List<Cliente>>(
                 future: clientes,
                 builder: (context, snapshot) {
@@ -92,6 +90,7 @@ class _Mongo_HomeState extends State<Mongo_Home> {
                   final data = snapshot.data!;
 
                   return SingleChildScrollView(
+                    padding: const EdgeInsets.only(bottom: 50),
                     child: Wrap(
                       spacing: 10,
                       runSpacing: 10,
@@ -271,6 +270,18 @@ class _Mongo_HomeState extends State<Mongo_Home> {
           ),
         ],
       ),
+
+      // boton flotante, en concreto este tiene un tamaño y padding fijos y no se puede modificar
+      floatingActionButton: Transform.translate(
+        // moverlo arriba o mas abajo maunualmente
+        offset: const Offset(0, -55),
+        child: FloatingActionButton(
+          backgroundColor: Color.fromARGB(255, 248, 214, 23),
+          onPressed: () {},
+          child: const Icon(Icons.add, color: Colors.black),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

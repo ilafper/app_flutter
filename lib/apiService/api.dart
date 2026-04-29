@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/cliente.dart';
 
 class ApiClientes {
-  static const url = "http://10.0.2.2:3000/api/clientes";
+  static const url = "http://192.168.0.25:3000/api/clientes";
 
   static Future<List<Cliente>> getClientes() async {
     print("LLLAMANDO LLAMANDO PROBANDO PROBAND");

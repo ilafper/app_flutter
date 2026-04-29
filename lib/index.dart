@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
       textTheme: GoogleFonts.poppinsTextTheme(),
       scaffoldBackgroundColor: const Color(0xFF2A2A2A),
@@ -43,7 +44,7 @@ class Selector extends State<PrimeraVista> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(),
+            
             Container(
               padding: const EdgeInsets.all(20),
               margin: const EdgeInsets.only(bottom: 30),
