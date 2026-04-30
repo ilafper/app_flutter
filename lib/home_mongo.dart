@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'apiService/api.dart';
 import 'package:app_flutter/models/cliente.dart';
-
+import 'crearClienteMongo.dart';
+import '../components/header.dart';
 class Mongo_Home extends StatefulWidget {
   const Mongo_Home({super.key});
 
@@ -19,23 +20,25 @@ class _Mongo_HomeState extends State<Mongo_Home> {
     clientes = ApiClientes.getClientes();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 20, 20, 20),
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          "Contactos",
-          style: TextStyle(
-            color: Colors.yellow,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.yellow),
+      appBar: const HeaderCustom(
+        
+        //nombre
+        titulo: "Gestión de usuarios" ,
+        // estilo texto
+        tituloStyle: TextStyle(
+        color: Colors.yellow,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1.2,
       ),
+
+        backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+        iconColor:Color.fromARGB(255,248,214,23),
+        ),
       body: Column(
         children: [
           //busqueda y filtro
@@ -53,6 +56,7 @@ class _Mongo_HomeState extends State<Mongo_Home> {
                 ),
 
                 hintText: "Buscar cliente...",
+                
                 hintStyle: const TextStyle(
                   color: Color.fromARGB(224, 255, 241, 43),
                 ),
@@ -69,8 +73,9 @@ class _Mongo_HomeState extends State<Mongo_Home> {
               ),
             ),
           ),
+          
           Expanded(
-            // contenedor del buscador
+           
             child: Container(
               width: double.infinity,
               height: double.infinity,
@@ -272,14 +277,19 @@ class _Mongo_HomeState extends State<Mongo_Home> {
       ),
 
       // boton flotante, en concreto este tiene un tamaño y padding fijos y no se puede modificar
-      floatingActionButton: Transform.translate(
-        // moverlo arriba o mas abajo maunualmente
-        offset: const Offset(0, -55),
-        child: FloatingActionButton(
-          backgroundColor: Color.fromARGB(255, 248, 214, 23),
-          onPressed: () {},
-          child: const Icon(Icons.add, color: Colors.black),
-        ),
+      floatingActionButton: FloatingActionButton(
+        
+        backgroundColor: const Color.fromARGB(255, 248, 214, 23),
+        onPressed: () {
+          print("PULSADO pulsando");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CrearClienteMongo(),
+              ),
+            );
+        },
+        child: const Icon(Icons.add, color: Colors.black),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
