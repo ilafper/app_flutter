@@ -11,6 +11,7 @@ class Mongo_Home extends StatefulWidget {
 }
 
 class _Mongo_HomeState extends State<Mongo_Home> {
+  
   late Future<List<Cliente>> clientes;
 
   @override
@@ -286,8 +287,12 @@ class _Mongo_HomeState extends State<Mongo_Home> {
               context,
               MaterialPageRoute(
                 builder: (context) => const CrearClienteMongo(),
-              ),
-            );
+              )
+          ).then((_) {
+            setState(() {
+              clientes = ApiClientes.getClientes();
+            });
+          });
         },
         child: const Icon(Icons.add, color: Colors.black),
       ),
