@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import '../home_mongo.dart';
 
 class ApiClientes {
-  static const url = "http://10.211.0.33:3000/api/clientes";
+  static const url = "https://api-agenda-dam.onrender.com/api/clientes";
 
   //url crear
 
-  static const url_crear_Cliente = "http://10.211.0.33:3000/api/crearcliente";
+  static const url_crear_Cliente = "https://api-agenda-dam.onrender.com/api/crearcliente";
   // cargar todos los clientes
   static Future<List<Cliente>> getClientes() async {
     print("LLLAMANDO LLAMANDO PROBANDO PROBAND");
@@ -28,7 +28,7 @@ class ApiClientes {
     }
   }
 
-  static Future<http.Response?> enviarDatos({
+  static Future<Map<String, dynamic>?> enviarDatos({
     required String nombre,
     required String apellidos,
     required String telefono,
@@ -38,6 +38,7 @@ class ApiClientes {
     final response = await http.post(
       Uri.parse(url_crear_Cliente),
       headers: {"Content-Type": "application/json"},
+      
       body: jsonEncode({
         "nombre": nombre,
         "apellidos": apellidos,
@@ -46,10 +47,13 @@ class ApiClientes {
         "correo": correo,
       }),
     );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return response; 
-    }
 
-     return null;
+    //print(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 400) {
+      var res = jsonDecode(response.body);
+      print('respues respuesta $res');
+      return res; 
+    }
   }
 }

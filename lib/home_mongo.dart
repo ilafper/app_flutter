@@ -22,7 +22,6 @@ class _Mongo_HomeState extends State<Mongo_Home> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -281,18 +280,19 @@ class _Mongo_HomeState extends State<Mongo_Home> {
       floatingActionButton: FloatingActionButton(
         
         backgroundColor: const Color.fromARGB(255, 248, 214, 23),
-        onPressed: () {
+        onPressed: () async {
           print("PULSADO pulsando");
-          Navigator.push(
+          await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const CrearClienteMongo(),
               )
-          ).then((_) {
-            setState(() {
-              clientes = ApiClientes.getClientes();
-            });
+          );
+
+          setState(() {
+            clientes = ApiClientes.getClientes();
           });
+          
         },
         child: const Icon(Icons.add, color: Colors.black),
       ),

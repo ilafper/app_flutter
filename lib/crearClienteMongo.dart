@@ -19,6 +19,13 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
   final TextEditingController direccion = TextEditingController();
   final TextEditingController correo = TextEditingController();
 
+
+  // para eviatr multiples clicks 
+
+  bool loading= false;
+
+  //validar formulario
+  final _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
     nombre.dispose();
@@ -36,7 +43,6 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //const Color.fromARGB(255, 20, 20, 20),
       resizeToAvoidBottomInset: true,
       // usar el componente header
       appBar: const HeaderCustom(
@@ -65,179 +71,233 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
             child: Padding(
               padding: const EdgeInsets.all(16),
 
-              child: Column(
-                children: [
-                  TextField(
-                    controller: nombre,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: "Nombre",
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: nombre,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "el nombre es obligatorio";
+                        }
+                        return null;
+                      },
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: "Nombre",
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
                         ),
-                      ),
 
-                      floatingLabelStyle: TextStyle(
-                        color: Color.fromARGB(
-                          255,
-                          248,
-                          214,
-                          23,
-                        ), // color cuando tiene focus
-                      ),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
+                        floatingLabelStyle: TextStyle(
+                          color: Color.fromARGB(
+                            255,
+                            248,
+                            214,
+                            23,
+                          ), // color cuando tiene focus
                         ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
 
-                  TextField(
-                    style: TextStyle(color: Colors.white),
-                    controller: apellidos,
-                    decoration: InputDecoration(
-                      labelText: "Apellidos",
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
-                        ),
-                      ),
-
-                      floatingLabelStyle: TextStyle(
-                        color: Color.fromARGB(
-                          255,
-                          248,
-                          214,
-                          23,
-                        ), // color cuando tiene focus
-                      ),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    SizedBox(height: 20),
 
-                  SizedBox(height: 20),
-                  TextField(
-                    style: TextStyle(color: Colors.white),
-                    controller: telefono,
-                    decoration: InputDecoration(
-                      labelText: "telefono",
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
+                    TextFormField(
+                      style: TextStyle(color: Colors.white),
+                      controller: apellidos,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "los apellidos son obligatorio";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Apellidos",
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
                         ),
-                      ),
 
-                      floatingLabelStyle: TextStyle(
-                        color: Color.fromARGB(
-                          255,
-                          248,
-                          214,
-                          23,
-                        ), // color cuando tiene focus
-                      ),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
+                        floatingLabelStyle: TextStyle(
+                          color: Color.fromARGB(
+                            255,
+                            248,
+                            214,
+                            23,
+                          ), // color cuando tiene focus
                         ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    style: TextStyle(color: Colors.white),
-                    controller: direccion,
-                    decoration: InputDecoration(
-                      labelText: "Direccion",
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
-                        ),
-                      ),
 
-                      floatingLabelStyle: TextStyle(
-                        color: Color.fromARGB(
-                          255,
-                          248,
-                          214,
-                          23,
-                        ), // color cuando tiene focus
-                      ),
-
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  SizedBox(height: 20),
-                  TextField(
-                    style: TextStyle(color: Colors.white),
-                    controller: correo,
-                    decoration: InputDecoration(
-                      labelText: "Correo",
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      style: TextStyle(color: Colors.white),
+                      controller: telefono,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "el telefono es obligatorio";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: "telefono",
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
                         ),
-                      ),
 
-                      floatingLabelStyle: TextStyle(
-                        color: Color.fromARGB(
-                          255,
-                          248,
-                          214,
-                          23,
-                        ), // color cuando tiene focus
-                      ),
+                        floatingLabelStyle: TextStyle(
+                          color: Color.fromARGB(
+                            255,
+                            248,
+                            214,
+                            23,
+                          ), // color cuando tiene focus
+                        ),
 
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 248, 214, 23),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      style: TextStyle(color: Colors.white),
+                      controller: direccion,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "la direccion es obligatoria";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Direccion",
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
+                        ),
 
-                  //boton
-                  ElevatedButton(
-                    onPressed: () async {
-                      final res = ApiClientes.enviarDatos(
-                        nombre: nombre.text,
-                        apellidos: apellidos.text,
-                        telefono: telefono.text,
-                        direccion: direccion.text,
-                        correo: correo.text,
-                      );
+                        floatingLabelStyle: TextStyle(
+                          color: Color.fromARGB(
+                            255,
+                            248,
+                            214,
+                            23,
+                          ), // color cuando tiene focus
+                        ),
 
-                      if (res != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => Mongo_Home()),
-                        );
-                        
-                      }
-                    },
-                    child: Text("Crear Cliente"),
-                  ),
-                ],
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 20),
+                    TextFormField(
+                      style: TextStyle(color: Colors.white),
+                      controller: correo,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "el correo es obligatorio";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Correo",
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Color.fromARGB(
+                            255,
+                            248,
+                            214,
+                            23,
+                          ), // color cuando tiene focus
+                        ),
+
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 248, 214, 23),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 20),
+
+                    //boton
+                    ElevatedButton(
+                      onPressed: loading ? null : () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            loading=true;
+                          });
+
+                          final res = await ApiClientes.enviarDatos(
+                            nombre: nombre.text,
+                            apellidos: apellidos.text,
+                            telefono: telefono.text,
+                            direccion: direccion.text,
+                            correo: correo.text,
+                          );
+
+                          setState(() {
+                            loading=false;
+                          });
+
+                          if (res != null) {
+                            //print(res["message"]);
+
+                            if (res["success"] == true) {
+                              print(res["message"]);
+                              Navigator.pop(context);
+                            } else {
+                              print(res["message"]);
+                            }
+                          }
+                        }
+                      },
+                      child: loading ? SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black,
+                        ),
+                      ): Text("Crear Cliente"),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
