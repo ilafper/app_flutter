@@ -3,6 +3,7 @@ import 'apiService/api.dart';
 import 'package:app_flutter/models/cliente.dart';
 import 'crearClienteMongo.dart';
 import '../components/header.dart';
+
 class Mongo_Home extends StatefulWidget {
   const Mongo_Home({super.key});
 
@@ -11,34 +12,36 @@ class Mongo_Home extends StatefulWidget {
 }
 
 class _Mongo_HomeState extends State<Mongo_Home> {
-  
-  late Future<List<Cliente>> clientes;
+  List<Cliente> clientes = [];
 
   @override
   void initState() {
     super.initState();
     print("INITSTATE EJECUTADO");
-    clientes = ApiClientes.getClientes();
+    cargarClientes();
   }
 
+  cargarClientes() async {
+    clientes = await ApiClientes.getClientes();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const HeaderCustom(
-        
         //nombre
-        titulo: "Gestión de usuarios" ,
+        titulo: "Gestión de usuarios",
         // estilo texto
         tituloStyle: TextStyle(
-        color: Colors.yellow,
-        fontWeight: FontWeight.bold,
-        letterSpacing: 1.2,
-      ),
+          color: Colors.yellow,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+        ),
 
         backgroundColor: const Color.fromARGB(255, 20, 20, 20),
-        iconColor:Color.fromARGB(255,248,214,23),
-        ),
+        iconColor: Color.fromARGB(255, 248, 214, 23),
+      ),
       body: Column(
         children: [
           //busqueda y filtro
@@ -56,7 +59,7 @@ class _Mongo_HomeState extends State<Mongo_Home> {
                 ),
 
                 hintText: "Buscar cliente...",
-                
+
                 hintStyle: const TextStyle(
                   color: Color.fromARGB(224, 255, 241, 43),
                 ),
@@ -73,226 +76,279 @@ class _Mongo_HomeState extends State<Mongo_Home> {
               ),
             ),
           ),
-          
+
+          // lista clientes
           Expanded(
-           
             child: Container(
               width: double.infinity,
               height: double.infinity,
               alignment: Alignment.center,
               decoration: BoxDecoration(color: Color.fromARGB(255, 24, 23, 23)),
-              child: FutureBuilder<List<Cliente>>(
-                future: clientes,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
 
-                  if (snapshot.hasError) {
-                    return const Center(child: Text("Error cargando datos"));
-                  }
+              child: clientes.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 50),
+                      itemCount: clientes.length,
+                      itemBuilder: (context, index) {
+                        final cliente = clientes[index];
 
-                  final data = snapshot.data!;
+                        return Padding(
+                          padding: const EdgeInsets.all(20),
 
-                  return SingleChildScrollView(
-                    padding: const EdgeInsets.only(bottom: 50),
-                    child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: List.generate(data.length, (index) {
-                        return SizedBox(
-                          width: 300,
-                          child: Card(
-                            color: const Color.fromARGB(255, 27, 27, 27),
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              // padding a toda la targeta
-                              padding: const EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    decoration: const BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
+                          // el sixedbox para dar tamaño o espacion entre cosas como en los Text field o tamaño a cada tarjeta
+                          child: Center(
+                            child: SizedBox(
+                              width: 350,
+                              child: Card(
+                                color: const Color.fromARGB(255, 43, 41, 41),
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Padding(
+                                  // padding a toda la targeta
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.only(
+                                          bottom: 10,
+                                        ),
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              color: Color.fromARGB(
+                                                255,
+                                                248,
+                                                214,
+                                                23,
+                                              ),
+                                              width: 1,
+                                            ),
+                                          ),
+                                        ),
+                                        child: const Icon(
+                                          Icons.person,
+                                          size: 70,
                                           color: Color.fromARGB(
                                             255,
                                             248,
                                             214,
                                             23,
                                           ),
-                                          width: 1,
                                         ),
                                       ),
-                                    ),
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: 70,
-                                      color: Color.fromARGB(255, 248, 214, 23),
-                                    ),
-                                  ),
 
-                                  const SizedBox(height: 10),
+                                      const SizedBox(height: 10),
 
-                                  Text(
-                                    "${data[index].nombre} ${data[index].apellidos}",
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-
-                                  const SizedBox(height: 10),
-
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.phone,
-                                        size: 18,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(width: 8),
                                       Text(
-                                        data[index].telefono,
+                                        "${cliente.nombre} ${cliente.apellidos}",
                                         style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                    ],
-                                  ),
 
-                                  const SizedBox(height: 5),
+                                      const SizedBox(height: 10),
 
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.location_on,
-                                        size: 18,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          data[index].direccion,
-                                          style: const TextStyle(
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.phone,
+                                            size: 18,
                                             color: Colors.white,
                                           ),
-                                        ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            cliente.telefono,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
 
-                                  const SizedBox(height: 5),
+                                      const SizedBox(height: 5),
 
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.email,
-                                        size: 18,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          data[index].correo,
-                                          style: const TextStyle(
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.location_on,
+                                            size: 18,
                                             color: Colors.white,
                                           ),
-                                        ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              cliente.direccion,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 5),
+
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.email,
+                                            size: 18,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              cliente.correo,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // espaciador
+                                      SizedBox(height: 20),
+
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        // botones de editar y borrar
+                                        children: [
+                                          ElevatedButton.icon(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: const Text(
+                                                      "Confirmar eliminación",
+                                                    ),
+                                                    content: const Text(
+                                                      "¿Estás seguro de que deseas eliminar este cliente?",
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                            context,
+                                                          );
+                                                        },
+                                                        child: const Text(
+                                                          "Cancelar",
+                                                        ),
+                                                      ),
+                                                      TextButton(
+                                                        //al pulsar en si llama a la funcion de eliminar
+                                                        onPressed: () async {
+                                                          print(
+                                                            cliente.code_user,
+                                                          );
+                                                          print(
+                                                            "BORRAR CLIENTE ${cliente.code_user}",
+                                                          );
+
+                                                          ApiClientes.eliminarcliente(
+                                                            cliente.code_user,
+                                                          );
+                                                          Navigator.pop(
+                                                            context,
+                                                          );
+                                                          setState(() {
+                                                            cargarClientes();
+                                                          });
+                                                        },
+
+                                                        child: const Text(
+                                                          "Aceptar",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                              //print("BORRAR CLIENTE ${data[index].code_user}");
+                                            },
+                                            icon: const Icon(Icons.delete),
+                                            label: const Text("Borrar"),
+
+                                            style: ElevatedButton.styleFrom(
+                                              iconColor: Colors.black,
+                                              backgroundColor: Color.fromARGB(
+                                                255,
+                                                248,
+                                                214,
+                                                23,
+                                              ),
+
+                                              foregroundColor:
+                                                  const Color.fromARGB(
+                                                    255,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                  ),
+                                            ),
+                                          ),
+
+                                          ElevatedButton.icon(
+                                            onPressed: () {},
+                                            icon: const Icon(Icons.edit),
+                                            label: const Text("Editar"),
+                                            style: ElevatedButton.styleFrom(
+                                              iconColor: Colors.black,
+                                              backgroundColor: Color.fromARGB(
+                                                255,
+                                                248,
+                                                214,
+                                                23,
+                                              ),
+                                              foregroundColor:
+                                                  const Color.fromARGB(
+                                                    255,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                  ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-
-                                  // espaciador
-                                  SizedBox(height: 20),
-
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      ElevatedButton.icon(
-                                        onPressed: () {},
-                                        icon: const Icon(Icons.delete),
-                                        label: const Text("Borrar"),
-                                        style: ElevatedButton.styleFrom(
-                                          iconColor: Colors.black,
-                                          backgroundColor: Color.fromARGB(
-                                            255,
-                                            248,
-                                            214,
-                                            23,
-                                          ),
-                                          foregroundColor: const Color.fromARGB(
-                                            255,
-                                            0,
-                                            0,
-                                            0,
-                                          ),
-                                        ),
-                                      ),
-
-                                      ElevatedButton.icon(
-                                        onPressed: () {},
-                                        icon: const Icon(Icons.edit),
-                                        label: const Text("Editar"),
-                                        style: ElevatedButton.styleFrom(
-                                          iconColor: Colors.black,
-                                          backgroundColor: Color.fromARGB(
-                                            255,
-                                            248,
-                                            214,
-                                            23,
-                                          ),
-                                          foregroundColor: const Color.fromARGB(
-                                            255,
-                                            0,
-                                            0,
-                                            0,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
                         );
-                      }),
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ),
         ],
       ),
 
-      // boton flotante, en concreto este tiene un tamaño y padding fijos y no se puede modificar
       floatingActionButton: FloatingActionButton(
-        
         backgroundColor: const Color.fromARGB(255, 248, 214, 23),
         onPressed: () async {
           print("PULSADO pulsando");
           await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CrearClienteMongo(),
-              )
+            context,
+            MaterialPageRoute(builder: (context) => const CrearClienteMongo()),
           );
 
           setState(() {
-            clientes = ApiClientes.getClientes();
+            cargarClientes();
           });
-          
         },
         child: const Icon(Icons.add, color: Colors.black),
       ),
@@ -300,3 +356,7 @@ class _Mongo_HomeState extends State<Mongo_Home> {
     );
   }
 }
+                  
+      // boton flotante, en concreto este tiene un tamaño y padding fijos y no se puede modificar
+      
+  
