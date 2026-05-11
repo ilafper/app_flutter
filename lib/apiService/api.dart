@@ -15,6 +15,10 @@ class ApiClientes {
 
   static const url_delete_Cliente =
       "https://api-agenda-dam.onrender.com/api/eliminarcliente";
+
+  static const url_filtro =
+      "https://api-agenda-dam.onrender.com/api/filtronombre";
+
   // cargar todos los clientes
   //acuerdate de poner static para compartir la funcion enm otrods sitios
   static Future<List<Cliente>> getClientes() async {
@@ -63,27 +67,34 @@ class ApiClientes {
     }
   }
 
-  static Future<Map<String, dynamic>?> eliminarcliente(String code_eliminar) async {
-    // final response = await http.delete(
-    //   Uri.parse('$url_delete_Cliente/$code_eliminar'),
-    //   headers: {"Content-Type": "application/json"},
-    // );
-
-    // if (response.statusCode == 200 || response.statusCode == 400) {
-    //   var res = jsonDecode(response.body);
-    //   print('respuesta eliminar $res');
-    //   return res;
-    // }
-
+  static Future<Map<String, dynamic>?> eliminarcliente(
+    String code_eliminar,
+  ) async {
     final response = await http.delete(
       Uri.parse('$url_delete_Cliente/$code_eliminar'),
       headers: {"Content-Type": "application/json"},
     );
 
-    if (response.statusCode == 200 || response.statusCode== 400) {
+    if (response.statusCode == 200 || response.statusCode == 400) {
       var res = jsonDecode(response.body);
       print('eliminar eliminar $res');
       return res;
+    }
+  }
+
+  static Future<Map<String, dynamic>> filtroBusqueda(String filtro) async {
+    final response = await http.get(Uri.parse('$url_filtro/$filtro'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+     
+
+      return data;
+    } else {
+      return {
+      "success": false,
+      "error": "Error en la petición"
+    };
     }
   }
 }

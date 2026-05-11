@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'apiService/api.dart';
 import 'package:app_flutter/models/cliente.dart';
 import 'crearClienteMongo.dart';
@@ -13,7 +14,9 @@ class Mongo_Home extends StatefulWidget {
 
 class _Mongo_HomeState extends State<Mongo_Home> {
   List<Cliente> clientes = [];
-
+  String filtroBusqueda = "";
+  bool cargando= true;
+  String mensajeErrror = "";
   @override
   void initState() {
     super.initState();
@@ -23,6 +26,8 @@ class _Mongo_HomeState extends State<Mongo_Home> {
 
   cargarClientes() async {
     clientes = await ApiClientes.getClientes();
+    cargando= false;
+    mensajeErrror="";
     setState(() {});
   }
 
@@ -74,8 +79,58 @@ class _Mongo_HomeState extends State<Mongo_Home> {
                   borderSide: BorderSide.none,
                 ),
               ),
+              onChanged: (value) async {
+                setState(() {
+                  cargando = false;
+                  mensajeErrror = "";
+                });
+    
+                filtroBusqueda = value;
+
+                final respuesta = await ApiClientes.filtroBusqueda(value);
+
+                print(respuesta);
+
+                if (value == "") {
+                  setState(() {
+                    cargarClientes();
+                  });
+                }
+
+                //comprobar si es sucess o no
+                if (respuesta["success"] == true) {
+                  setState(() {
+                    clientes = List<Cliente>.from(
+                      respuesta["datos"].map((e) => Cliente.fromJson(e)),
+                    );
+                    mensajeErrror="";
+                    cargando = false;
+                  });
+                } else if (respuesta["success"] == false) {
+                  setState(() {
+                    clientes = [];
+                    //cambiar el valor de la variable por el mensaje de la api
+                    mensajeErrror = respuesta["error"];
+                     cargando = false;
+                  });
+                }
+              },
             ),
           ),
+
+
+          //parte para el mensaje de error debajo del bsuca
+          if (mensajeErrror.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                mensajeErrror,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
 
           // lista clientes
           Expanded(
@@ -85,253 +140,231 @@ class _Mongo_HomeState extends State<Mongo_Home> {
               alignment: Alignment.center,
               decoration: BoxDecoration(color: Color.fromARGB(255, 24, 23, 23)),
 
-              child: clientes.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 50),
-                      itemCount: clientes.length,
-                      itemBuilder: (context, index) {
-                        final cliente = clientes[index];
+              child: cargando ? const Center(child: CircularProgressIndicator()) : ListView.builder(
+                padding: const EdgeInsets.only(bottom: 50),
+                itemCount: clientes.length,
+                itemBuilder: (context, index) {
+                  final cliente = clientes[index];
 
-                        return Padding(
-                          padding: const EdgeInsets.all(20),
+                  return Padding(
+                    padding: const EdgeInsets.all(20),
 
-                          // el sixedbox para dar tamaño o espacion entre cosas como en los Text field o tamaño a cada tarjeta
-                          child: Center(
-                            child: SizedBox(
-                              width: 350,
-                              child: Card(
-                                color: const Color.fromARGB(255, 43, 41, 41),
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Padding(
-                                  // padding a toda la targeta
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.only(
-                                          bottom: 10,
+                    // el sixedbox para dar tamaño o espacion entre cosas como en los Text field o tamaño a cada tarjeta
+                    child: Center(
+                      child: SizedBox(
+                        width: 350,
+                        child: Card(
+                          color: const Color.fromARGB(255, 43, 41, 41),
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            // padding a toda la targeta
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  decoration: const BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Color.fromARGB(
+                                          255,
+                                          248,
+                                          214,
+                                          23,
                                         ),
-                                        decoration: const BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              color: Color.fromARGB(
-                                                255,
-                                                248,
-                                                214,
-                                                23,
-                                              ),
-                                              width: 1,
-                                            ),
-                                          ),
-                                        ),
-                                        child: const Icon(
-                                          Icons.person,
-                                          size: 70,
-                                          color: Color.fromARGB(
-                                            255,
-                                            248,
-                                            214,
-                                            23,
-                                          ),
-                                        ),
+                                        width: 1,
                                       ),
-
-                                      const SizedBox(height: 10),
-
-                                      Text(
-                                        "${cliente.nombre} ${cliente.apellidos}",
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-
-                                      const SizedBox(height: 10),
-
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.phone,
-                                            size: 18,
-                                            color: Colors.white,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            cliente.telefono,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 5),
-
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.location_on,
-                                            size: 18,
-                                            color: Colors.white,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              cliente.direccion,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 5),
-
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.email,
-                                            size: 18,
-                                            color: Colors.white,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              cliente.correo,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      // espaciador
-                                      SizedBox(height: 20),
-
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        // botones de editar y borrar
-                                        children: [
-                                          ElevatedButton.icon(
-                                            onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    title: const Text(
-                                                      "Confirmar eliminación",
-                                                    ),
-                                                    content: const Text(
-                                                      "¿Estás seguro de que deseas eliminar este cliente?",
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                            context,
-                                                          );
-                                                        },
-                                                        child: const Text(
-                                                          "Cancelar",
-                                                        ),
-                                                      ),
-                                                      TextButton(
-                                                        //al pulsar en si llama a la funcion de eliminar
-                                                        onPressed: () async {
-                                                          print(
-                                                            cliente.code_user,
-                                                          );
-                                                          print(
-                                                            "BORRAR CLIENTE ${cliente.code_user}",
-                                                          );
-
-                                                          ApiClientes.eliminarcliente(
-                                                            cliente.code_user,
-                                                          );
-                                                          Navigator.pop(
-                                                            context,
-                                                          );
-                                                          setState(() {
-                                                            cargarClientes();
-                                                          });
-                                                        },
-
-                                                        child: const Text(
-                                                          "Aceptar",
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                              //print("BORRAR CLIENTE ${data[index].code_user}");
-                                            },
-                                            icon: const Icon(Icons.delete),
-                                            label: const Text("Borrar"),
-
-                                            style: ElevatedButton.styleFrom(
-                                              iconColor: Colors.black,
-                                              backgroundColor: Color.fromARGB(
-                                                255,
-                                                248,
-                                                214,
-                                                23,
-                                              ),
-
-                                              foregroundColor:
-                                                  const Color.fromARGB(
-                                                    255,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                  ),
-                                            ),
-                                          ),
-
-                                          ElevatedButton.icon(
-                                            onPressed: () {},
-                                            icon: const Icon(Icons.edit),
-                                            label: const Text("Editar"),
-                                            style: ElevatedButton.styleFrom(
-                                              iconColor: Colors.black,
-                                              backgroundColor: Color.fromARGB(
-                                                255,
-                                                248,
-                                                214,
-                                                23,
-                                              ),
-                                              foregroundColor:
-                                                  const Color.fromARGB(
-                                                    255,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 70,
+                                    color: Color.fromARGB(255, 248, 214, 23),
                                   ),
                                 ),
-                              ),
+
+                                const SizedBox(height: 10),
+
+                                Text(
+                                  "${cliente.nombre} ${cliente.apellidos}",
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.phone,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      cliente.telefono,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 5),
+
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.location_on,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        cliente.direccion,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 5),
+
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.email,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        cliente.correo,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                // espaciador
+                                SizedBox(height: 20),
+
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // botones de editar y borrar
+                                  children: [
+                                    ElevatedButton.icon(
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                "Confirmar eliminación",
+                                              ),
+                                              content: const Text(
+                                                "¿Estás seguro de que deseas eliminar este cliente?",
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text("Cancelar"),
+                                                ),
+                                                TextButton(
+                                                  //al pulsar en si llama a la funcion de eliminar
+                                                  onPressed: () async {
+                                                    print(cliente.code_user);
+                                                    print(
+                                                      "BORRAR CLIENTE ${cliente.code_user}",
+                                                    );
+
+                                                    ApiClientes.eliminarcliente(
+                                                      cliente.code_user,
+                                                    );
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      cargarClientes();
+                                                    });
+                                                  },
+
+                                                  child: const Text("Aceptar"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                        //print("BORRAR CLIENTE ${data[index].code_user}");
+                                      },
+                                      icon: const Icon(Icons.delete),
+                                      label: const Text("Borrar"),
+
+                                      style: ElevatedButton.styleFrom(
+                                        iconColor: Colors.black,
+                                        backgroundColor: Color.fromARGB(
+                                          255,
+                                          248,
+                                          214,
+                                          23,
+                                        ),
+
+                                        foregroundColor: const Color.fromARGB(
+                                          255,
+                                          0,
+                                          0,
+                                          0,
+                                        ),
+                                      ),
+                                    ),
+
+                                    ElevatedButton.icon(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.edit),
+                                      label: const Text("Editar"),
+                                      style: ElevatedButton.styleFrom(
+                                        iconColor: Colors.black,
+                                        backgroundColor: Color.fromARGB(
+                                          255,
+                                          248,
+                                          214,
+                                          23,
+                                        ),
+                                        foregroundColor: const Color.fromARGB(
+                                          255,
+                                          0,
+                                          0,
+                                          0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
+                  );
+                },
+              ),
             ),
           ),
         ],
