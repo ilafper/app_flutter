@@ -21,7 +21,7 @@ class _Sql_HomeState extends State<sql_Home> {
   void initState() {
     super.initState();
     print("INITSTATE EJECUTADO");
-  cargarclienteSql();
+    cargarclienteSql();
   }
 
   cargarclienteSql() async {
@@ -80,40 +80,41 @@ class _Sql_HomeState extends State<sql_Home> {
                 ),
               ),
               onChanged: (value) async {
-                // setState(() {
-                //   cargando = false;
-                //   mensajeErrror = "";
-                // });
-    
-                // filtroBusqueda = value;
+                setState(() {
+                  cargando = false;
+                  mensajeErrror = "";
+                });
 
-                // final respuesta = await Apisql.filtroBusqueda(value);
+                filtroBusqueda = value;
+                final respuesta = await Apisql.filtroBusquedaSQL(value);
+                print(respuesta);
+                if (value == "") {
+                  setState(() {
+                    cargarclienteSql();
+                  });
+                }
 
-                // print(respuesta);
+                //comprobar si es sucess o no
+                if (respuesta["success"] == true) {
+                  setState(() {
+                    print('owowwowowo $respuesta');
 
-                // if (value == "") {
-                //   setState(() {
-                //   cargarclienteSql();
-                //   });
-                // }
-
-                // //comprobar si es sucess o no
-                // if (respuesta["success"] == true) {
-                //   setState(() {
-                //     clientes = List<Cliente>.from(
-                //       respuesta["datos"].map((e) => Cliente.fromJson(e)),
-                //     );
-                //     mensajeErrror="";
-                //     cargando = false;
-                //   });
-                // } else if (respuesta["success"] == false) {
-                //   setState(() {
-                //     clientes = [];
-                //     //cambiar el valor de la variable por el mensaje de la api
-                //     mensajeErrror = respuesta["error"];
-                //      cargando = false;
-                //   });
-                // }
+                    clientes = List<Cliente>.from(
+                      respuesta["datos"].map((e) => Cliente.fromJson(e)),
+                    );
+                    mensajeErrror = "";
+                    cargando = false;
+                  });
+                } else if (respuesta["success"] == false) {
+                  setState(() {
+                    clientes = [];
+                    print(respuesta["error"]);
+                    //cambiar el valor de la variable por el mensaje de la api
+                    mensajeErrror = respuesta["error"];
+                    print('asdasdasdasdasdasddddd $mensajeErrror');
+                    cargando = false;
+                  });
+                }
               },
             ),
           ),
@@ -292,18 +293,18 @@ class _Sql_HomeState extends State<sql_Home> {
                                                 TextButton(
                                                   //al pulsar en si llama a la funcion de eliminar
                                                   onPressed: () async {
-                                                    // print(cliente.code_user);
-                                                    // print(
-                                                    //   "BORRAR CLIENTE ${cliente.code_user}",
-                                                    // );
+                                                     print(cliente.code_user);
+                                                     print(
+                                                       "BORRAR CLIENTE SQL ${cliente.code_user}",
+                                                     );
+                                                     Apisql.eliminarclienteSQL(
+                                                       cliente.code_user,
+                                                     );
 
-                                                    // ApiClientes.eliminarcliente(
-                                                    //   cliente.code_user,
-                                                    // );
-                                                    // Navigator.pop(context);
-                                                    // setState(() {
-                                                    // cargarclienteSql();
-                                                    // });
+                                                     Navigator.pop(context);
+                                                     setState(() {
+                                                     cargarclienteSql();
+                                                     });
                                                   },
 
                                                   child: const Text("Aceptar"),
@@ -335,26 +336,7 @@ class _Sql_HomeState extends State<sql_Home> {
                                       ),
                                     ),
 
-                                    ElevatedButton.icon(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.edit),
-                                      label: const Text("Editar"),
-                                      style: ElevatedButton.styleFrom(
-                                        iconColor: Colors.black,
-                                        backgroundColor: Color.fromARGB(
-                                          255,
-                                          248,
-                                          214,
-                                          23,
-                                        ),
-                                        foregroundColor: const Color.fromARGB(
-                                          255,
-                                          0,
-                                          0,
-                                          0,
-                                        ),
-                                      ),
-                                    ),
+                                    
                                   ],
                                 ),
                               ],
