@@ -18,11 +18,12 @@ class HeaderCustom extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context){
     return AppBar(
       backgroundColor: backgroundColor ?? Colors.blue,
-
+      // le añdes el icono pra ir para atras pero no tienes que configurar nada ya lo hace flutter para ti, 
       iconTheme: IconThemeData(
         color: iconColor ?? Colors.white,
       ),
 
+      // estructura del titulo , el texto mas el estilo
       title: Text(
         titulo,
         style: tituloStyle, 

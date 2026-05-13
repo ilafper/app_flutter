@@ -1,25 +1,35 @@
 import 'dart:ffi';
 
-import 'package:app_flutter/home_mongo.dart';
+import 'package:app_flutter/apiService/apisql.dart';
+import 'package:app_flutter/sql.dart';
 import 'package:flutter/material.dart';
 import 'apiService/api.dart';
 import '../components/header.dart';
 
-class CrearClienteMongo extends StatefulWidget {
-  const CrearClienteMongo({super.key});
+
+// los mismo de mongo pero para sql
+
+class CrearClienteSql extends StatefulWidget {
+  
+  const CrearClienteSql({super.key});
 
   @override
-  State<CrearClienteMongo> createState() => _CrearClienteMongoState();
+  State<CrearClienteSql> createState() => _CrearClienteSqlState();
 }
 
 
 
-class _CrearClienteMongoState extends State<CrearClienteMongo> {
+class _CrearClienteSqlState extends State<CrearClienteSql> {
   
+
   final TextEditingController nombre = TextEditingController();
+  
   final TextEditingController apellidos = TextEditingController();
+  
   final TextEditingController telefono = TextEditingController();
+  
   final TextEditingController direccion = TextEditingController();
+  
   final TextEditingController correo = TextEditingController();
 
 
@@ -29,6 +39,9 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
 
   //validar formulario
   final _formKey = GlobalKey<FormState>();
+  
+
+  // liberar memoria y destruir recursos cuando una pantalla/widget deja de existir.
   @override
   void dispose() {
     nombre.dispose();
@@ -39,7 +52,7 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
     super.dispose();
   }
 
-  void enviarDatos() {
+  void enviarDatoSQL() {
     print("asdasd");
   }
 
@@ -50,7 +63,7 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
       // usar el componente header
       appBar: const HeaderCustom(
         //nombre
-        titulo: "Crear Usuario",
+        titulo: "Crear Usuario SQL",
         // estilo texto
         tituloStyle: TextStyle(
           color: Colors.yellow,
@@ -266,7 +279,8 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
                             loading=true;
                           });
 
-                          final res = await ApiClientes.enviarDatos(
+                          //llamar a la funcion para crear cliente 
+                          final res = await Apisql.crearClienteSql(
                             nombre: nombre.text,
                             apellidos: apellidos.text,
                             telefono: telefono.text,
