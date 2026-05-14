@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
       textTheme: GoogleFonts.poppinsTextTheme(),
-      scaffoldBackgroundColor: const Color(0xFF2A2A2A),
   ),
       home: PrimeraVista());
   }
@@ -36,7 +35,7 @@ class Selector extends State<PrimeraVista> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF2A2A2A),
+      backgroundColor: const Color.fromARGB(255, 20, 20, 20),
 
       //barra superior
       //contenido principall

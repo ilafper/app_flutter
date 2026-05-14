@@ -334,26 +334,7 @@ class _Mongo_HomeState extends State<Mongo_Home> {
                                       ),
                                     ),
 
-                                    ElevatedButton.icon(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.edit),
-                                      label: const Text("Editar"),
-                                      style: ElevatedButton.styleFrom(
-                                        iconColor: Colors.black,
-                                        backgroundColor: Color.fromARGB(
-                                          255,
-                                          248,
-                                          214,
-                                          23,
-                                        ),
-                                        foregroundColor: const Color.fromARGB(
-                                          255,
-                                          0,
-                                          0,
-                                          0,
-                                        ),
-                                      ),
-                                    ),
+                                    
                                   ],
                                 ),
                               ],

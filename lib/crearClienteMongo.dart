@@ -12,20 +12,16 @@ class CrearClienteMongo extends StatefulWidget {
   State<CrearClienteMongo> createState() => _CrearClienteMongoState();
 }
 
-
-
 class _CrearClienteMongoState extends State<CrearClienteMongo> {
-  
   final TextEditingController nombre = TextEditingController();
   final TextEditingController apellidos = TextEditingController();
   final TextEditingController telefono = TextEditingController();
   final TextEditingController direccion = TextEditingController();
   final TextEditingController correo = TextEditingController();
 
+  // para eviatr multiples clicks
 
-  // para eviatr multiples clicks 
-
-  bool loading= false;
+  bool loading = false;
 
   //validar formulario
   final _formKey = GlobalKey<FormState>();
@@ -89,6 +85,10 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         labelText: "Nombre",
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
+                        
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -125,6 +125,9 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
                       },
                       decoration: InputDecoration(
                         labelText: "Apellidos",
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -161,6 +164,9 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
                       },
                       decoration: InputDecoration(
                         labelText: "telefono",
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -196,6 +202,9 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
                       },
                       decoration: InputDecoration(
                         labelText: "Direccion",
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -221,6 +230,7 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
                     ),
 
                     SizedBox(height: 20),
+
                     TextFormField(
                       style: TextStyle(color: Colors.white),
                       controller: correo,
@@ -233,6 +243,9 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
                       decoration: InputDecoration(
                         labelText: "Correo",
                         border: OutlineInputBorder(),
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromARGB(255, 248, 214, 23),
@@ -255,50 +268,62 @@ class _CrearClienteMongoState extends State<CrearClienteMongo> {
                         ),
                       ),
                     ),
-
+                    
                     SizedBox(height: 20),
 
                     //boton
                     ElevatedButton(
-                      onPressed: loading ? null : () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            loading=true;
-                          });
+                      style: ElevatedButton.styleFrom(
+                        iconColor: Colors.black,
+                        backgroundColor: Color.fromARGB(255, 212, 182, 13),
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        
+                      ),
+                      onPressed: loading
+                          ? null
+                          : () async {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  loading = true;
+                                });
 
-                          final res = await ApiClientes.enviarDatos(
-                            nombre: nombre.text,
-                            apellidos: apellidos.text,
-                            telefono: telefono.text,
-                            direccion: direccion.text,
-                            correo: correo.text,
-                          );
+                                final res = await ApiClientes.enviarDatos(
+                                  nombre: nombre.text,
+                                  apellidos: apellidos.text,
+                                  telefono: telefono.text,
+                                  direccion: direccion.text,
+                                  correo: correo.text,
+                                );
 
-                          setState(() {
-                            loading=false;
-                          });
+                                setState(() {
+                                  loading = false;
+                                });
 
-                          if (res != null) {
-                            //print(res["message"]);
+                                if (res != null) {
+                                  //print(res["message"]);
 
-                            if (res["success"] == true) {
-                              print(res["message"]);
-                              Navigator.pop(context);
-                            } else {
-                              print(res["message"]);
-                            }
-                          }
-                        }
-                      },
-                      
-                      child: loading ? SizedBox(
-                        height: 10,
-                        width: 10,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.black,
-                        ),
-                      ): Text("Crear Cliente"),
+                                  if (res["success"] == true) {
+                                    print(res["message"]);
+                                    Navigator.pop(context);
+                                  } else {
+                                    print(res["message"]);
+                                  }
+                                }
+                              }
+                            },
+
+                      child: loading
+                          ? SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: const Color.fromARGB(255, 17, 8, 8),
+                              ),
+
+                            )
+                          : Text("Crear Cliente"),
+                          
                     ),
                   ],
                 ),
