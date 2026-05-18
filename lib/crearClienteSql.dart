@@ -103,6 +103,9 @@ class _CrearClienteSqlState extends State<CrearClienteSql> {
                       decoration: InputDecoration(
                         labelText: "Nombre",
                         border: OutlineInputBorder(),
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromARGB(255, 248, 214, 23),
@@ -139,6 +142,9 @@ class _CrearClienteSqlState extends State<CrearClienteSql> {
                       decoration: InputDecoration(
                         labelText: "Apellidos",
                         border: OutlineInputBorder(),
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromARGB(255, 248, 214, 23),
@@ -175,6 +181,9 @@ class _CrearClienteSqlState extends State<CrearClienteSql> {
                       decoration: InputDecoration(
                         labelText: "telefono",
                         border: OutlineInputBorder(),
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromARGB(255, 248, 214, 23),
@@ -210,6 +219,9 @@ class _CrearClienteSqlState extends State<CrearClienteSql> {
                       decoration: InputDecoration(
                         labelText: "Direccion",
                         border: OutlineInputBorder(),
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromARGB(255, 248, 214, 23),
@@ -246,6 +258,9 @@ class _CrearClienteSqlState extends State<CrearClienteSql> {
                       decoration: InputDecoration(
                         labelText: "Correo",
                         border: OutlineInputBorder(),
+                        labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 214, 207, 207),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: Color.fromARGB(255, 248, 214, 23),
@@ -273,46 +288,57 @@ class _CrearClienteSqlState extends State<CrearClienteSql> {
 
                     //boton
                     ElevatedButton(
-                      onPressed: loading ? null : () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            loading=true;
-                          });
+                       style: ElevatedButton.styleFrom(
+                        iconColor: Colors.black,
+                        backgroundColor: Color.fromARGB(255, 212, 182, 13),
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        
+                      ),
+                      onPressed: loading
+                          ? null
+                          : () async {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  loading = true;
+                                });
 
-                          //llamar a la funcion para crear cliente 
-                          final res = await Apisql.crearClienteSql(
-                            nombre: nombre.text,
-                            apellidos: apellidos.text,
-                            telefono: telefono.text,
-                            direccion: direccion.text,
-                            correo: correo.text,
-                          );
+                                final res = await ApiClientes.enviarDatos(
+                                  nombre: nombre.text,
+                                  apellidos: apellidos.text,
+                                  telefono: telefono.text,
+                                  direccion: direccion.text,
+                                  correo: correo.text,
+                                );
 
-                          setState(() {
-                            loading=false;
-                          });
+                                setState(() {
+                                  loading = false;
+                                });
 
-                          if (res != null) {
-                            //print(res["message"]);
+                                if (res != null) {
+                                  //print(res["message"]);
 
-                            if (res["success"] == true) {
-                              print(res["message"]);
-                              Navigator.pop(context);
-                            } else {
-                              print(res["message"]);
-                            }
-                          }
-                        }
-                      },
-                      
-                      child: loading ? SizedBox(
-                        height: 10,
-                        width: 10,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.black,
-                        ),
-                      ): Text("Crear Cliente"),
+                                  if (res["success"] == true) {
+                                    print(res["message"]);
+                                    Navigator.pop(context);
+                                  } else {
+                                    print(res["message"]);
+                                  }
+                                }
+                              }
+                            },
+
+                      child: loading
+                          ? SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: const Color.fromARGB(255, 17, 8, 8),
+                              ),
+
+                            )
+                          : Text("Crear Cliente"),
+                          
                     ),
                   ],
                 ),

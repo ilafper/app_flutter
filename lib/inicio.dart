@@ -18,6 +18,11 @@ class inicio extends StatelessWidget {
   }
 }
 
+
+
+
+
+
 class InicioView extends StatelessWidget {
   const InicioView({super.key});
 
@@ -53,6 +58,7 @@ class InicioView extends StatelessWidget {
                     context,
                     MaterialPageRoute(builder: (context) => const MyApp()),
                   );
+                  
                 },
                 child: const Text("Entrar" , style:const  TextStyle(
                   fontSize: 17
