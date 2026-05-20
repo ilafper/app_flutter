@@ -6,6 +6,7 @@ void main() {
   runApp(const MyApp());
 }
 
+// segunda vista para elegir la base de datos
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -23,7 +24,6 @@ class MyApp extends StatelessWidget {
 // guardar la opcion
 class PrimeraVista extends StatefulWidget {
   const PrimeraVista({super.key});
-
   @override
   State<PrimeraVista> createState() => Selector();
 }
@@ -78,6 +78,7 @@ class Selector extends State<PrimeraVista> {
                 //icono flecha
                 iconEnabledColor: const Color.fromARGB(255, 0, 0, 0),
                 underline: const SizedBox(), // quita la línea fea
+                //opciones del boton
                 items: const [
                   DropdownMenuItem(value: "MongoDB", child: Text("Ir a mongo")),
                   DropdownMenuItem(value: "SQL", child: Text("Ir a sql")),
@@ -86,21 +87,20 @@ class Selector extends State<PrimeraVista> {
                   setState(() {
                     seleccion = value;
                   });
+                  // comprobar el valor seleccionado
                   if (value == 'MongoDB') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Mongo_Home(),
-              ),
-            );
-          } else if (value == 'SQL') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const sql_Home(),
-              ),
-            );
-          }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Mongo_Home(),
+                      ),
+                    );
+                  } else if (value == 'SQL') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const sql_Home()),
+                    );
+                  }
                 },
               ),
             ),

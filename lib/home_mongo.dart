@@ -36,7 +36,7 @@ class _Mongo_HomeState extends State<Mongo_Home> {
     return Scaffold(
       appBar: const HeaderCustom(
         //nombre
-        titulo: "Gestión de usuarios",
+        titulo: "Gestion de usuarios",
         // estilo texto
         tituloStyle: TextStyle(
           color: Colors.yellow,

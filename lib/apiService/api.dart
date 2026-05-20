@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/cliente.dart';
 import 'package:flutter/material.dart';
 import '../home_mongo.dart';
-
+// clase cliente para crud en
 class ApiClientes {
   static const url = "https://api-agenda-dam.onrender.com/api/clientes";
 
@@ -23,21 +23,23 @@ class ApiClientes {
   //acuerdate de poner static para compartir la funcion enm otrods sitios
   static Future<List<Cliente>> getClientes() async {
     print("LLLAMANDO LLAMANDO PROBANDO PROBAND");
+    // peticion a la api para cargar clientes
     final res = await http.get(Uri.parse(url));
     print(res);
+    // si fue exitosa manda la lista
     if (res.statusCode == 200) {
       final json = jsonDecode(res.body);
-
+      // guardamos la lista
       List data = json["lista_clientes"];
 
       print(data);
-
+      //devolvemos al lista
       return data.map((e) => Cliente.fromJson(e)).toList();
     } else {
       throw Exception("Error al cargar clientes");
     }
   }
-
+  // funcion para crear nuevo ciente
   static Future<Map<String, dynamic>?> enviarDatos({
     required String nombre,
     required String apellidos,
@@ -67,6 +69,7 @@ class ApiClientes {
     }
   }
 
+  // funcion para eliminar cliente
   static Future<Map<String, dynamic>?> eliminarcliente(
     String code_eliminar,
   ) async {
@@ -81,7 +84,7 @@ class ApiClientes {
       return res;
     }
   }
-
+  // funcion filtro busqueda por nombre 
   static Future<Map<String, dynamic>> filtroBusqueda(String filtro) async {
     final response = await http.get(Uri.parse('$url_filtro/$filtro'));
 

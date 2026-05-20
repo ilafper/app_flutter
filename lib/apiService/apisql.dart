@@ -5,7 +5,7 @@ import '../models/cliente.dart';
 import 'package:flutter/material.dart';
 import '../sql.dart';
 
-
+// lo mismo que en mongo pero para sql
 class Apisql {
   static const clientes_sql = "https://api-sql-agenda-bien.onrender.com/api/clientesql";
   

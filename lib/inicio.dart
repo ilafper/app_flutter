@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'index.dart';
-
+// pestaña inicial al entrar en la app
 void main() {
   runApp(const inicio());
 }
 
+// devlver la vista que creo despues
 class inicio extends StatelessWidget {
   const inicio({super.key});
 
@@ -22,7 +23,7 @@ class inicio extends StatelessWidget {
 
 
 
-
+// vista principal
 class InicioView extends StatelessWidget {
   const InicioView({super.key});
 
@@ -47,7 +48,8 @@ class InicioView extends StatelessWidget {
                   color: Color.fromARGB(255, 248, 214, 23),
                 ),
               ),
-
+              
+              // espacio entre el titulo y el boton
               const SizedBox(height: 20),
               SizedBox(
                 width: 150,

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-
+// mi conponente header o app bar en flutter 
 class HeaderCustom extends StatelessWidget implements PreferredSizeWidget {
+  
+  // parametros que se le pasa, solo el titulo es onligatorio
   final String titulo;
   final TextStyle? tituloStyle;
   final Color? iconColor;
   final Color? backgroundColor;
-
+  // constructor
+  
  const HeaderCustom({
   super.key,
   required this.titulo,
@@ -14,7 +17,8 @@ class HeaderCustom extends StatelessWidget implements PreferredSizeWidget {
   this.backgroundColor
  });
 
- @override
+
+// vista que se mostrar en la pantalla en este caso , dibuja o construye un app bar que es el header del movil 
   Widget build(BuildContext context){
     return AppBar(
       backgroundColor: backgroundColor ?? Colors.blue,
@@ -32,8 +36,8 @@ class HeaderCustom extends StatelessWidget implements PreferredSizeWidget {
     );
   }
   
+  //ocupara la altura estandar
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
 
 }
